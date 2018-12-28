@@ -47,7 +47,9 @@
       new Date(0,0,0,0,...d.Time.split(":"))
     ))
     .attr("r", radio)
-    .attr("fill", "purple");
+    .attr("fill", "#6b5b95")
+    .attr("onmouseover", "tooltip(this)")
+    .attr("onmouseout", "$('#tooltip').hide()");
 
     plot.append("g")
     .attr("transform", `translate(0 ,${h-yPadding})`)
@@ -61,8 +63,14 @@
   }
 })();
 
-function format(str) {
-  return new Date(0,0,0,0,...str.split(":"));
+function tooltip(dot) {
+  const circle = $(dot);
+  const left = parseInt(circle.attr("cx")) + 10;
+
+  $("#tooltip").show()
+  .css ("top", `${circle.attr("cy")}px`)
+  .css("left", `${left}px`)
+  .text("Hola");
 }
 
 const obj = {
