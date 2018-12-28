@@ -6,10 +6,10 @@
   xhttp.onload = () => {
     const dataset = JSON.parse(xhttp.responseText);
     
-    const [w, h] = [800, 500];
-    const xPadding = 10;
+    const [w, h] = [800, 350];
+    const xPadding = 50;
     const yPadding = 20;
-    const radio = 10;
+    const radio = 7;
 
     const xScale = d3.scaleLinear()
     .domain([
@@ -26,6 +26,9 @@
         new Date(0,0,0,0,...d.Time.split(":"))
       ))
     ]).range([yPadding, h - yPadding]);
+
+    const xAxis = d3.axisBottom(xScale);
+    const yAxis = d3.axisLeft(yScale);
 
     const plot = d3.select("#chart")
     .append("svg")
@@ -45,6 +48,14 @@
     ))
     .attr("r", radio)
     .attr("fill", "purple");
+
+    plot.append("g")
+    .attr("transform", `translate(0 ,${h-yPadding})`)
+    .call(xAxis);
+
+    plot.append("g")
+    .attr("transform", `translate(${xPadding/2}, 0)`)
+    .call(yAxis);
 
     //$("#chart").text(JSON.stringify(json));
   }
