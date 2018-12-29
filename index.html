@@ -20,7 +20,20 @@
 
   <section class="container-fluid">
     <div id="chart" class="position-relative mx-auto text-center">
-      <div id="tooltip" class="position-absolute p-3 rounded border shadow hide"></div>
+      <div id="tooltip" class="position-absolute p-3 rounded border shadow hide">
+        <div class="tooltip-headline h5 m-0">
+          <span id="name"></span>&nbsp;
+          (<span id="nation"></span>)
+        </div>
+        <div class="tooltip-subheadline">
+          Place: <span id="place"></span>
+          Year: <span id="year"></span>
+          Time: <span id="time"></span>
+        </div>
+        <div id="tooltip-content">
+          <p class="mt-3 mb-0"><span id="doping"></span></p>
+        </div>
+      </div>
     </div>
   </section>
 

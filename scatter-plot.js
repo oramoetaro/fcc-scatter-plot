@@ -6,29 +6,25 @@
   xhttp.onload = () => {
     const dataset = JSON.parse(xhttp.responseText);
     
+    // Setting size of plot
     const [w, h] = [800, 350];
     const xPadding = 50;
     const yPadding = 20;
     const radio = 7;
 
     const xScale = d3.scaleLinear()
-    .domain([
-      d3.min(dataset, (d) => d.Year),
-      d3.max(dataset, (d) => d.Year)
-    ]).range([xPadding, w - xPadding]);
+    .domain([1993, 2015])
+    .range([xPadding, w - xPadding]);
 
     const yScale = d3.scaleTime()
     .domain([
-      d3.min(dataset, (d) => (
-        new Date(0,0,0,0,...d.Time.split(":"))
-      )),
-      d3.max(dataset, (d) => (
-        new Date(0,0,0,0,...d.Time.split(":"))
-      ))
+        new Date(0,0,0,0,36,50),
+        new Date(0,0,0,0,40,0)
     ]).range([yPadding, h - yPadding]);
 
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale);
+    yAxis.tickFormat(d3.timeFormat("%M:%S"));
 
     const plot = d3.select("#chart")
     .append("svg")
@@ -42,6 +38,10 @@
     .attr("class", "dot")
     .attr("data-xvalue", (d) => d.Year)
     .attr("data-yvalue", (d) => d.Time)
+    .attr("data-name", (d) => d.Name)
+    .attr("data-nation", (d) => d.Nationality)
+    .attr("data-place", (d) => d.Place)
+    .attr("data-doping", (d) => d.Doping)
     .attr("cx", (d) => xScale(d.Year))
     .attr("cy", (d) => yScale(
       new Date(0,0,0,0,...d.Time.split(":"))
@@ -56,21 +56,28 @@
     .call(xAxis);
 
     plot.append("g")
-    .attr("transform", `translate(${xPadding/2}, 0)`)
+    .attr("transform", `translate(${xPadding}, 0)`)
     .call(yAxis);
 
-    //$("#chart").text(JSON.stringify(json));
+    // $("#chart").text(JSON.stringify(dataset));
   }
 })();
 
-function tooltip(dot) {
-  const circle = $(dot);
-  const left = parseInt(circle.attr("cx")) + 10;
+function tooltip(circle) {
+  const dot = $(circle);
+  const left = parseInt(dot.attr("cx")) + 10;
 
   $("#tooltip").show()
-  .css ("top", `${circle.attr("cy")}px`)
-  .css("left", `${left}px`)
-  .text("Hola");
+  .css ("top", `${dot.attr("cy")}px`)
+  .css("left", `${left}px`);
+  
+  $("#name").text(dot.attr("data-name"));
+  $("#nation").text(dot.attr("data-nation"));
+  $("#place").text(dot.attr("data-place"));
+  $("#year").text(dot.attr("data-xvalue"));
+  $("#time").text(dot.attr("data-yvalue"));
+  $("#doping").text(dot.attr("data-doping"));
+
 }
 
 const obj = {
