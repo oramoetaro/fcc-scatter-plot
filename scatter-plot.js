@@ -15,7 +15,7 @@
     // Dot style constants
     const fillColor = "#82b74b";
     const fillColor2 = "#c1946a"
-    const strokeColor ="#3e4444";
+    const strokeColor = "#3e4444";
 
     const xScale = d3.scaleLinear()
       .domain([1993, 2015])
@@ -92,36 +92,38 @@
       .attr("transform", `translate(${xPadding}, 0)`)
       .call(yAxis);
 
+    // We added the legend elemente
     const legend = d3
-    .select("#legend")
-    .append("svg")
-    .attr("width", w * 1/6)
-    .attr("height", 50)
-    
-    legend.append("circle")
-    .attr("cx", 10)
-    .attr("cy", 10)
-    .attr("r", radio)
-    .attr("fill", fillColor)
-    .attr("stroke", strokeColor);
+      .select("#legend")
+      .append("svg")
+      .attr("width", w * 1 / 6)
+      .attr("height", 50)
 
     legend.append("circle")
-    .attr("cx", 10)
-    .attr("cy", 40)
-    .attr("r", radio)
-    .attr("fill", fillColor2)
-    .attr("stroke", strokeColor)
+      .attr("cx", 10)
+      .attr("cy", 10)
+      .attr("r", radio)
+      .attr("fill", fillColor)
+      .attr("stroke", strokeColor);
+
+    legend.append("circle")
+      .attr("cx", 10)
+      .attr("cy", 40)
+      .attr("r", radio)
+      .attr("fill", fillColor2)
+      .attr("stroke", strokeColor)
 
     legend.append("text")
-    .attr("x", 30)
-    .attr("y", 10 + radio / 2)
-    .text("Alegated")
+      .attr("x", 30)
+      .attr("y", 10 + radio / 2)
+      .text("Alegated")
 
     legend.append("text")
-    .attr("x", 30)
-    .attr("y", 40 + radio / 2)
-    .text("No alegated")
+      .attr("x", 30)
+      .attr("y", 40 + radio / 2)
+      .text("No alegated")
 
+    // Setting the legend position
     $("#legend").css({
       left: w * 0.73,
       top: h * 0.3
@@ -130,6 +132,7 @@
   }
 })();
 
+// The tooltip function
 function tooltip(circle) {
   const dot = $(circle);
   const left = parseInt(dot.attr("cx")) + 10;
