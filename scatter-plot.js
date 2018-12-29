@@ -5,61 +5,128 @@
   xhttp.send();
   xhttp.onload = () => {
     const dataset = JSON.parse(xhttp.responseText);
-    
+
     // Setting size of plot
     const [w, h] = [800, 350];
     const xPadding = 50;
     const yPadding = 20;
     const radio = 7;
 
+    // Dot style constants
+    const fillColor = "#82b74b";
+    const fillColor2 = "#c1946a"
+    const strokeColor ="#3e4444";
+
     const xScale = d3.scaleLinear()
-    .domain([1993, 2015])
-    .range([xPadding, w - xPadding]);
+      .domain([1993, 2015])
+      .range([xPadding, w - xPadding]);
 
     const yScale = d3.scaleTime()
-    .domain([
-        new Date(0,0,0,0,36,50),
-        new Date(0,0,0,0,40,0)
-    ]).range([yPadding, h - yPadding]);
+      .domain([
+        new Date(0, 0, 0, 0, 36, 30),
+        new Date(0, 0, 0, 0, 40, 0)
+      ]).range([yPadding, h - yPadding]);
 
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale);
-    yAxis.tickFormat(d3.timeFormat("%M:%S"));
+    const xAxis = d3.axisBottom(xScale)
+      .tickValues([
+        1994,
+        1997,
+        2000,
+        2003,
+        2006,
+        2009,
+        2012,
+        2015
+      ])
+      .tickFormat(d3.format("d"));
+
+    const yAxis = d3.axisLeft(yScale)
+      .tickValues([
+        new Date(0, 0, 0, 0, 36, 30),
+        new Date(0, 0, 0, 0, 37, 0),
+        new Date(0, 0, 0, 0, 37, 30),
+        new Date(0, 0, 0, 0, 38, 0),
+        new Date(0, 0, 0, 0, 38, 30),
+        new Date(0, 0, 0, 0, 39, 0),
+        new Date(0, 0, 0, 0, 39, 30),
+        new Date(0, 0, 0, 0, 40, 0)
+      ]).tickFormat(
+        d3.timeFormat("%M:%S")
+      );
 
     const plot = d3.select("#chart")
-    .append("svg")
-    .attr("width", w)
-    .attr("height", h);
+      .append("svg")
+      .attr("width", w)
+      .attr("height", h);
 
     plot.selectAll("circle")
-    .data(dataset)
-    .enter()
-    .append("circle")
-    .attr("class", "dot")
-    .attr("data-xvalue", (d) => d.Year)
-    .attr("data-yvalue", (d) => d.Time)
-    .attr("data-name", (d) => d.Name)
-    .attr("data-nation", (d) => d.Nationality)
-    .attr("data-place", (d) => d.Place)
-    .attr("data-doping", (d) => d.Doping)
-    .attr("cx", (d) => xScale(d.Year))
-    .attr("cy", (d) => yScale(
-      new Date(0,0,0,0,...d.Time.split(":"))
-    ))
+      .data(dataset)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("data-xvalue", (d) => d.Year)
+      .attr("data-yvalue", (d) => d.Time)
+      .attr("data-name", (d) => d.Name)
+      .attr("data-nation", (d) => d.Nationality)
+      .attr("data-place", (d) => d.Place)
+      .attr("data-doping", (d) => d.Doping)
+      .attr("cx", (d) => xScale(d.Year))
+      .attr("cy", (d) => yScale(
+        new Date(0, 0, 0, 0, ...d.Time.split(":"))
+      ))
+      .attr("r", radio)
+      .attr("fill", (d) => {
+        return d.Doping ? fillColor : fillColor2
+      })
+      .attr("stroke", strokeColor)
+      .attr("onmouseover", "tooltip(this)")
+      .attr("onmouseout", "$('#tooltip').hide()");
+
+    plot.append("g")
+      .attr("id", "x-axis")
+      .attr("transform", `translate(0 ,${h-yPadding})`)
+      .call(xAxis);
+
+    plot.append("g")
+      .attr("id", "y-axis")
+      .attr("transform", `translate(${xPadding}, 0)`)
+      .call(yAxis);
+
+    const legend = d3
+    .select("#legend")
+    .append("svg")
+    .attr("width", w * 1/6)
+    .attr("height", 50)
+    
+    legend.append("circle")
+    .attr("cx", 10)
+    .attr("cy", 10)
     .attr("r", radio)
-    .attr("fill", "#6b5b95")
-    .attr("onmouseover", "tooltip(this)")
-    .attr("onmouseout", "$('#tooltip').hide()");
+    .attr("fill", fillColor)
+    .attr("stroke", strokeColor);
 
-    plot.append("g")
-    .attr("transform", `translate(0 ,${h-yPadding})`)
-    .call(xAxis);
+    legend.append("circle")
+    .attr("cx", 10)
+    .attr("cy", 40)
+    .attr("r", radio)
+    .attr("fill", fillColor2)
+    .attr("stroke", strokeColor)
 
-    plot.append("g")
-    .attr("transform", `translate(${xPadding}, 0)`)
-    .call(yAxis);
+    legend.append("text")
+    .attr("x", 30)
+    .attr("y", 10 + radio / 2)
+    .text("Alegated")
 
-    // $("#chart").text(JSON.stringify(dataset));
+    legend.append("text")
+    .attr("x", 30)
+    .attr("y", 40 + radio / 2)
+    .text("No alegated")
+
+    $("#legend").css({
+      left: w * 0.73,
+      top: h * 0.3
+    })
+
   }
 })();
 
@@ -68,9 +135,10 @@ function tooltip(circle) {
   const left = parseInt(dot.attr("cx")) + 10;
 
   $("#tooltip").show()
-  .css ("top", `${dot.attr("cy")}px`)
-  .css("left", `${left}px`);
-  
+    .css("top", `${dot.attr("cy")}px`)
+    .css("left", `${left}px`)
+    .attr("data-year", dot.attr("data-xvalue"));
+
   $("#name").text(dot.attr("data-name"));
   $("#nation").text(dot.attr("data-nation"));
   $("#place").text(dot.attr("data-place"));

@@ -5,11 +5,15 @@ html, body {
 }
 
 body {
-  background-color: #a2b9bc;
+  font-family: sans-serif;
 }
 
 .hide {
   display: none;
+}
+
+#title {
+  color: #3e4444;
 }
 
 #chart {
@@ -18,5 +22,10 @@ body {
 
 #tooltip {
   color: white;
-  background-color: #878f99;
+  background-color: #82b74b;
+  border: solid, 10px, #82b74b;
+}
+
+#legend {
+  border-radius: 5%;
 }
