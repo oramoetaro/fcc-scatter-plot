@@ -22,10 +22,8 @@
       .range([xPadding, w - xPadding]);
 
     const yScale = d3.scaleTime()
-      .domain([
-        new Date(0, 0, 0, 0, 36, 30),
-        new Date(0, 0, 0, 0, 40, 0)
-      ]).range([yPadding, h - yPadding]);
+      .domain([setTime("36:30"),setTime("40:00")])
+      .range([yPadding, h - yPadding]);
 
     const xAxis = d3.axisBottom(xScale)
       .tickValues([
@@ -42,14 +40,14 @@
 
     const yAxis = d3.axisLeft(yScale)
       .tickValues([
-        new Date(0, 0, 0, 0, 36, 30),
-        new Date(0, 0, 0, 0, 37, 0),
-        new Date(0, 0, 0, 0, 37, 30),
-        new Date(0, 0, 0, 0, 38, 0),
-        new Date(0, 0, 0, 0, 38, 30),
-        new Date(0, 0, 0, 0, 39, 0),
-        new Date(0, 0, 0, 0, 39, 30),
-        new Date(0, 0, 0, 0, 40, 0)
+        setTime("36:30"),
+        setTime("37:00"),
+        setTime("37:30"),
+        setTime("38:00"),
+        setTime("38:30"),
+        setTime("39:00"),
+        setTime("39:30"),
+        setTime("40:00")
       ]).tickFormat(
         d3.timeFormat("%M:%S")
       );
@@ -65,21 +63,17 @@
       .append("circle")
       .attr("class", "dot")
       .attr("data-xvalue", (d) => d.Year)
-      .attr("data-yvalue", (d) => {
-        return new Date(0, 0, 0, 0, ...d.Time.split(":"))
-      })
+      .attr("data-yvalue", (d) => setTime(d.Time))
       .attr("data-name", (d) => d.Name)
       .attr("data-nation", (d) => d.Nationality)
       .attr("data-place", (d) => d.Place)
       .attr("data-doping", (d) => d.Doping)
       .attr("cx", (d) => xScale(d.Year))
-      .attr("cy", (d) => yScale(
-        new Date(0, 0, 0, 0, ...d.Time.split(":"))
-      ))
+      .attr("cy", (d) => yScale(setTime(d.Time)))
       .attr("r", radio)
-      .attr("fill", (d) => {
-        return d.Doping ? fillColor : fillColor2
-      })
+      .attr("fill", (d) =>
+        d.Doping ? fillColor : fillColor2
+      )
       .attr("stroke", strokeColor)
       .attr("onmouseover", "tooltip(this)")
       .attr("onmouseout", "$('#tooltip').hide()");
@@ -133,6 +127,15 @@
 
   }
 })();
+
+// Calculate Date from Time
+function setTime(text) {
+  const arr = text.split(":");
+  return new Date(
+    arr.map((v, i) => [6e4, 1e3][i] * v)
+    .reduce((a, b) => a + b)
+  );
+}
 
 // The tooltip function
 function tooltip(circle) {
