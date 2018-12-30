@@ -65,7 +65,9 @@
       .append("circle")
       .attr("class", "dot")
       .attr("data-xvalue", (d) => d.Year)
-      .attr("data-yvalue", (d) => d.Time)
+      .attr("data-yvalue", (d) => {
+        return new Date(0, 0, 0, 0, ...d.Time.split(":"))
+      })
       .attr("data-name", (d) => d.Name)
       .attr("data-nation", (d) => d.Nationality)
       .attr("data-place", (d) => d.Place)
