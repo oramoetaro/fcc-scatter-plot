@@ -17,6 +17,7 @@
     const fillColor2 = "#c1946a"
     const strokeColor = "#3e4444";
 
+    // Setting scales
     const xScale = d3.scaleLinear()
       .domain([1993, 2015])
       .range([xPadding, w - xPadding]);
@@ -25,6 +26,7 @@
       .domain([setTime("36:30"),setTime("40:00")])
       .range([yPadding, h - yPadding]);
 
+    // Setting Axes
     const xAxis = d3.axisBottom(xScale)
       .tickValues([
         1994,
@@ -64,6 +66,7 @@
       .attr("class", "dot")
       .attr("data-xvalue", (d) => d.Year)
       .attr("data-yvalue", (d) => setTime(d.Time))
+      .attr("data-time", (d) => d.Time)
       .attr("data-name", (d) => d.Name)
       .attr("data-nation", (d) => d.Nationality)
       .attr("data-place", (d) => d.Place)
@@ -151,18 +154,7 @@ function tooltip(circle) {
   $("#nation").text(dot.attr("data-nation"));
   $("#place").text(dot.attr("data-place"));
   $("#year").text(dot.attr("data-xvalue"));
-  $("#time").text(dot.attr("data-yvalue"));
+  $("#time").text(dot.attr("data-time"));
   $("#doping").text(dot.attr("data-doping"));
 
-}
-
-const obj = {
-  "Time": "36:50",
-  "Place": 1,
-  "Seconds": 2210,
-  "Name": "Marco Pantani",
-  "Year": 1995,
-  "Nationality": "ITA",
-  "Doping": "Alleged drug use during 1995 due to high hematocrit levels",
-  "URL": "https://en.wikipedia.org/wiki/Marco_Pantani#Alleged_drug_use"
 }
