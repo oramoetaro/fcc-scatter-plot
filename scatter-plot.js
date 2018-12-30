@@ -8,8 +8,8 @@
 
     // Setting size of plot
     const [w, h] = [800, 350];
-    const xPadding = 50;
-    const yPadding = 20;
+    const xPadding = 70;
+    const yPadding = 50;
     const radio = 7;
 
     // Dot style constants
@@ -17,13 +17,17 @@
     const fillColor2 = "#c1946a"
     const strokeColor = "#3e4444";
 
+    // Axes Labels
+    const yLabel = "Time (mm:ss)";
+    const xLabel = "Competition Year";
+
     // Setting scales
     const xScale = d3.scaleLinear()
       .domain([1993, 2015])
       .range([xPadding, w - xPadding]);
 
     const yScale = d3.scaleTime()
-      .domain([setTime("36:30"),setTime("40:00")])
+      .domain([setTime("36:30"), setTime("40:00")])
       .range([yPadding, h - yPadding]);
 
     // Setting Axes
@@ -91,7 +95,7 @@
       .attr("transform", `translate(${xPadding}, 0)`)
       .call(yAxis);
 
-    // We added the legend elemente
+    // We added the legend element
     const legend = d3
       .select("#legend")
       .append("svg")
@@ -121,6 +125,18 @@
       .attr("x", 30)
       .attr("y", 40 + radio / 2)
       .text("No alegated")
+
+    // Adding axis labels
+    plot.append("text")
+    .attr("x", 350)
+    .attr("y", 340)
+    .text(xLabel);
+
+    plot.append("text")
+    .attr("x", -225)
+    .attr("y", 20)
+    .attr("transform", "rotate(-90)")
+    .text(yLabel);
 
     // Setting the legend position
     $("#legend").css({
